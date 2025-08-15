@@ -35,15 +35,37 @@ const GameController = (() => {
   const player2 = Player("Player 2", "O");
   let currentPlayer = player1;
 
+  let player1Score = 0;
+  let player2Score = 0;
+
+
+  const getCurrentPlayer = () => currentPlayer;
+
   const winCombos = [
     [0, 1, 2], [3,4,5], [6,7,8],
     [0,3,6], [1,4,7], [2,5,8],
     [0,4,8], [2,4,6]
   ];
 
+
+      const addWin = () => {
+      if (currentPlayer === player1) {
+        player1Score++;
+      } else {
+        player2Score++;
+      }
+    }
+
+    getScore = () =>({
+      player1: player1Score, 
+      player2: player2Score
+    });
+
+
   const playTurn = (index) => {
     Gameboard.setCell(index, currentPlayer.marker)
     if (checkWin()) {
+      addWin();
       console.log(`${currentPlayer.name} wins!`);
       return;
     }
@@ -55,6 +77,16 @@ const GameController = (() => {
 
     }
 
+
+
+      const resetButton = document.querySelector("#reset-button");
+      resetButton.addEventListener("click", () => {
+        Gameboard.reset();
+        displayController.updateBoard();
+        displayController.setMessage(`${GameController.getCurrentPlayer().name}`)
+      })
+    
+
     const checkWin = () => {
     const board = Gameboard.getBoard();
     return winCombos.some(combo => 
@@ -62,11 +94,50 @@ const GameController = (() => {
     );
 
   };
-    return {playTurn};
+    return {playTurn, checkWin, getCurrentPlayer, getScore};
 })();
 
-GameController.playTurn(0); // X
-GameController.playTurn(3); // O
-GameController.playTurn(1); // X
-GameController.playTurn(4); // O
-GameController.playTurn(2); // X 
+
+
+const displayController = (() => {
+  const cells = document.querySelectorAll(".cell");
+  const message = document.querySelector("#message");
+  const results = document.querySelector("#results")
+  
+
+  const updateBoard = () => {
+    const displayBoard = Gameboard.getBoard();
+    displayBoard.forEach((mark, index) => {
+      cells[index].textContent = mark;
+
+    });
+
+  };
+
+  const setMessage = (msg) => {
+    message.textContent = msg;
+
+    }
+  
+  const setResult = (msg) => {
+      results.textContent = msg;
+  }
+
+  cells.forEach((cell, index) => {
+    cell.addEventListener("click", () => {
+      GameController.playTurn(index);
+      updateBoard();
+
+      if (GameController.checkWin()) {
+        setMessage(`${GameController.getCurrentPlayer().name} Wins!`);
+
+        const score = GameController.getScore();
+        setResult(`P1: ${score.player1} | P2: ${score.player2}`);
+      } else {
+        setMessage(`Player ${GameController.getCurrentPlayer().name}'s turn`);
+      }
+    });
+  });
+
+    return {updateBoard, setMessage, setResult}
+})();
