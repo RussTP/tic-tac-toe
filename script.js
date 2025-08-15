@@ -1,16 +1,15 @@
 
 const Gameboard = (() => {
   let board = ["", "", "", "", "", "", "", "", ""];
-console.log(board);
   const getBoard = () => board;
   const setCell = (index, marker) => {
     if (index >= 0 && index <= 8) {
       if(board[index] === "") {
         board[index] = marker;
       } else {
-      return "Cell Taken!"
+        board[index].marker.disabled = true;
       }
-    }
+    };
 
   }
 
@@ -64,12 +63,16 @@ const GameController = (() => {
 
   const playTurn = (index) => {
     Gameboard.setCell(index, currentPlayer.marker)
+    
     if (checkWin()) {
       addWin();
+      displayController.disableCells();
       console.log(`${currentPlayer.name} wins!`);
-      return;
+      return {win: true, player: currentPlayer};
     }
+
     switchPlayer();
+    return {win: false, player: currentPlayer};
     };
 
     const switchPlayer = () => {
@@ -84,6 +87,7 @@ const GameController = (() => {
         Gameboard.reset();
         displayController.updateBoard();
         displayController.setMessage(`${GameController.getCurrentPlayer().name}`)
+        displayController.enableCells();
       })
     
 
@@ -125,19 +129,31 @@ const displayController = (() => {
 
   cells.forEach((cell, index) => {
     cell.addEventListener("click", () => {
-      GameController.playTurn(index);
+      const result = GameController.playTurn(index);
       updateBoard();
 
-      if (GameController.checkWin()) {
-        setMessage(`${GameController.getCurrentPlayer().name} Wins!`);
+      if (result.win) {
+        setMessage(`${result.player.name} Wins!`);
 
         const score = GameController.getScore();
         setResult(`P1: ${score.player1} | P2: ${score.player2}`);
       } else {
-        setMessage(`Player ${GameController.getCurrentPlayer().name}'s turn`);
+        setMessage(`Player ${result.player.name}'s turn`);
       }
     });
   });
 
-    return {updateBoard, setMessage, setResult}
+    const disableCells = () => {
+  cells.forEach(cell => {
+    cell.style.pointerEvents = "none";
+    });
+  };
+
+  const enableCells = () => {
+    cells.forEach(cell => {
+      cell.style.pointerEvents = "auto";
+    });
+  };
+
+    return {updateBoard, setMessage, setResult, disableCells, enableCells}
 })();
