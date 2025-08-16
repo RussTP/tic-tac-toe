@@ -13,6 +13,9 @@ const Gameboard = (() => {
 
   }
 
+
+
+
   const reset = () => {
     board = ["", "", "", "", "", "", "", "", ""];
 
@@ -37,8 +40,19 @@ const GameController = (() => {
   let player1Score = 0;
   let player2Score = 0;
 
+    const setPlayerNames = (name1, name2) => {
+     if (name1) player1.name = name1;
+     if (name2) player2.name = name2;
+    };
 
   const getCurrentPlayer = () => currentPlayer;
+
+  const getPlayerNames = () => {
+    return {
+      player1: player1.name,
+      player2: player2.name
+    };
+  };
 
   const winCombos = [
     [0, 1, 2], [3,4,5], [6,7,8],
@@ -79,7 +93,7 @@ const GameController = (() => {
       currentPlayer = (currentPlayer === player1 ? player2 : player1);
 
     }
-
+  
 
 
       const resetButton = document.querySelector("#reset-button");
@@ -98,7 +112,7 @@ const GameController = (() => {
     );
 
   };
-    return {playTurn, checkWin, getCurrentPlayer, getScore};
+    return {playTurn, checkWin, getCurrentPlayer, getScore, setPlayerNames, getPlayerNames};
 })();
 
 
@@ -106,8 +120,13 @@ const GameController = (() => {
 const displayController = (() => {
   const cells = document.querySelectorAll(".cell");
   const message = document.querySelector("#message");
-  const results = document.querySelector("#results")
-  
+  const results = document.querySelector("#results");
+  const player1Name = document.querySelector("#player1-name");
+  const player2Name = document.querySelector("#player2-name");
+  const submit = document.querySelector('input[type="submit"]');
+  const startButton = document.querySelector("#start-button");
+  const getForm = document.querySelector("#player-form");
+  const board = document.querySelector("#board");
 
   const updateBoard = () => {
     const displayBoard = Gameboard.getBoard();
@@ -117,6 +136,31 @@ const displayController = (() => {
     });
 
   };
+  
+  const setPlayerName = () => {
+    submit.addEventListener("click", (event) => {
+      event.preventDefault();
+      const name1 = player1Name.value.trim();
+      const name2 = player2Name.value.trim();
+      getForm.classList.remove("active");
+
+      if (name1 || name2) {
+        GameController.setPlayerNames(name1, name2);
+        setMessage(`${GameController.getCurrentPlayer().name}'s turn`);
+      }
+    });
+  };
+
+
+  const start = () => {
+    startButton.addEventListener("click", () => { 
+  getForm.classList.add("active");
+  board.classList.add("active");
+    });
+
+    
+  };
+
 
   const setMessage = (msg) => {
     message.textContent = msg;
@@ -127,6 +171,21 @@ const displayController = (() => {
       results.textContent = msg;
   }
 
+      const disableCells = () => {
+  cells.forEach(cell => {
+    cell.style.pointerEvents = "none";
+    });
+  };
+
+
+
+  const enableCells = () => {
+    cells.forEach(cell => {
+      cell.style.pointerEvents = "auto";
+    });
+  };
+
+
   cells.forEach((cell, index) => {
     cell.addEventListener("click", () => {
       const result = GameController.playTurn(index);
@@ -136,24 +195,17 @@ const displayController = (() => {
         setMessage(`${result.player.name} Wins!`);
 
         const score = GameController.getScore();
-        setResult(`P1: ${score.player1} | P2: ${score.player2}`);
+        const names = GameController.getPlayerNames();
+        setResult(`${names.player1}: ${score.player1} | ${names.player2}: ${score.player2}`);
       } else {
         setMessage(`Player ${result.player.name}'s turn`);
       }
     });
   });
 
-    const disableCells = () => {
-  cells.forEach(cell => {
-    cell.style.pointerEvents = "none";
-    });
-  };
 
-  const enableCells = () => {
-    cells.forEach(cell => {
-      cell.style.pointerEvents = "auto";
-    });
-  };
-
-    return {updateBoard, setMessage, setResult, disableCells, enableCells}
+    return {updateBoard, setMessage, setResult, disableCells, enableCells, setPlayerName, start}
 })();
+
+displayController.setPlayerName();
+displayController.start();

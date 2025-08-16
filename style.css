@@ -11,6 +11,9 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    font-family:sans-serif;
+    background-color:rgb(74, 117, 155) ;
+    color: coral;
 }
 
 h1 {
@@ -24,18 +27,95 @@ button{
     width: 150px;
     height: 30px;
     font-size: 1rem;
+    cursor: pointer;
+    border-radius: 10px;
+    background-color:  rgb(13, 5, 88);
+    color: coral;
+}
+
+#player-form {
+     display: none;
+}
+
+
+#player-form.active {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 50px;
+    align-items: center;
+    padding: 3rem;
+    flex-wrap: wrap;
+}
+
+
+input[type="text"] {
+    display: flex;
+    padding: 0.5rem;
+    align-items: center;
+    justify-content: center;
+    background-color:  rgb(13, 5, 88);
+    color: coral;
+    border-radius: 10px;
+    
+}
+
+input::placeholder {
+    font-weight: bold;
+    color: rgba(10, 108, 238, 0.63);
+}
+
+input:focus {
+    color:  rgb(13, 5, 88);
+    background-color: coral;
+    box-shadow: 0 0 4px 3px coral;
+}
+
+label {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    color: rgb(13, 5, 88);
+    font-weight: bold;
+} 
+
+
+input[type="submit"] {
+    display: flex;
+    justify-content: center;
+    padding: 0.5rem;
+    align-items: center;
+    width: 7rem;
+    margin-top: 10px;
+    border-radius: 10px;
+    background-color:  rgb(13, 5, 88);
+    color: coral;
+
+}
+
+input[type="submit"]:hover {
+    cursor: pointer;
 }
 
 #board {
+    display: none;
+}
+
+#board.active {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    align-items: center;
     justify-content: center;
     aspect-ratio: 1/1;
     margin: 0 auto;
 
 }
+
+#results {
+    margin-bottom: 15px;
+    font-weight: bold;
+    font-size: 1.4rem;
+    text-shadow: 0 0 4px 3px black;
+}
     
+
 
 .cell {
     width: 6rem;
@@ -44,10 +124,15 @@ button{
     display: flex;
     align-items: center;
     justify-content: center;
+    background-color: rgb(13, 5, 88);
     font-size: 2rem;
     cursor: pointer;
-    border: 1px solid black;
+    box-shadow: 0 0 4px 3px coral;
+    color: coral;
+    font-weight: bold;
 }
+
+
 
 #message {
     display: flex;
