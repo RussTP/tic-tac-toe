@@ -104,9 +104,11 @@ input[type="submit"]:hover {
     grid-template-columns: repeat(3, 1fr);
     justify-content: center;
     aspect-ratio: 1/1;
+    gap:0.5px;
     margin: 0 auto;
 
 }
+
 
 #results {
     margin-bottom: 15px;
@@ -130,7 +132,9 @@ input[type="submit"]:hover {
     box-shadow: 0 0 4px 3px coral;
     color: coral;
     font-weight: bold;
+    transition: all 0.9s ease;
 }
+
 
 
 
@@ -140,5 +144,6 @@ input[type="submit"]:hover {
     justify-content: center;
     margin: 20px;
     font-size: 1.5rem;
-
 }
+
+

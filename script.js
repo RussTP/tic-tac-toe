@@ -18,6 +18,7 @@ const Gameboard = (() => {
 
   const reset = () => {
     board = ["", "", "", "", "", "", "", "", ""];
+    
 
   };
 
@@ -45,14 +46,16 @@ const GameController = (() => {
      if (name2) player2.name = name2;
     };
 
-  const getCurrentPlayer = () => currentPlayer;
 
-  const getPlayerNames = () => {
+      const getPlayerNames = () => {
     return {
       player1: player1.name,
       player2: player2.name
     };
   };
+
+  const getCurrentPlayer = () => currentPlayer;
+
 
   const winCombos = [
     [0, 1, 2], [3,4,5], [6,7,8],
@@ -76,6 +79,7 @@ const GameController = (() => {
 
 
   const playTurn = (index) => {
+    const board = Gameboard.getBoard();
     Gameboard.setCell(index, currentPlayer.marker)
     
     if (checkWin()) {
@@ -83,7 +87,14 @@ const GameController = (() => {
       displayController.disableCells();
       console.log(`${currentPlayer.name} wins!`);
       return {win: true, player: currentPlayer};
+    } 
+
+    if (board.every(cell => cell !== "")) {
+      displayController.setMessage("It's a tie!");
+      displayController.disableCells();
+      return;
     }
+
 
     switchPlayer();
     return {win: false, player: currentPlayer};
@@ -100,9 +111,10 @@ const GameController = (() => {
       resetButton.addEventListener("click", () => {
         Gameboard.reset();
         displayController.updateBoard();
-        displayController.setMessage(`${GameController.getCurrentPlayer().name}`)
+        displayController.setMessage("");
         displayController.enableCells();
-      })
+        displayController.resetCellStyle();
+      });
     
 
     const checkWin = () => {
@@ -110,8 +122,9 @@ const GameController = (() => {
     return winCombos.some(combo => 
       combo.every(index => board[index] === currentPlayer.marker)
     );
-
   };
+
+
     return {playTurn, checkWin, getCurrentPlayer, getScore, setPlayerNames, getPlayerNames};
 })();
 
@@ -143,6 +156,9 @@ const displayController = (() => {
       const name1 = player1Name.value.trim();
       const name2 = player2Name.value.trim();
       getForm.classList.remove("active");
+       board.classList.add("active");
+       startButton.disabled = true;
+       startButton.style.backgroundColor = "rgb(145, 145, 143)"; 
 
       if (name1 || name2) {
         GameController.setPlayerNames(name1, name2);
@@ -155,7 +171,6 @@ const displayController = (() => {
   const start = () => {
     startButton.addEventListener("click", () => { 
   getForm.classList.add("active");
-  board.classList.add("active");
     });
 
     
@@ -171,13 +186,13 @@ const displayController = (() => {
       results.textContent = msg;
   }
 
+
+
       const disableCells = () => {
   cells.forEach(cell => {
     cell.style.pointerEvents = "none";
     });
   };
-
-
 
   const enableCells = () => {
     cells.forEach(cell => {
@@ -185,10 +200,17 @@ const displayController = (() => {
     });
   };
 
+  const resetCellStyle = () => {
+    cells.forEach(cell => {
+      cell.style.transform ="scale(1) rotate(0deg)";
+    });
+  };
+
 
   cells.forEach((cell, index) => {
     cell.addEventListener("click", () => {
       const result = GameController.playTurn(index);
+      cell.style.transform = "scale(1.07) rotate(360deg)";
       updateBoard();
 
       if (result.win) {
@@ -204,8 +226,9 @@ const displayController = (() => {
   });
 
 
-    return {updateBoard, setMessage, setResult, disableCells, enableCells, setPlayerName, start}
+    return {updateBoard, setMessage, setResult, disableCells, enableCells, setPlayerName, start, resetCellStyle}
 })();
 
 displayController.setPlayerName();
 displayController.start();
+displayController.setResult();
