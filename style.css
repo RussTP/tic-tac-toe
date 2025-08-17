@@ -1,3 +1,12 @@
+@font-face {
+font-family: "coveredbyyourgrace-regular-webfont";
+src: url(coveredbyyourgrace-regular-webfont.woff) format("woff"),
+     url(coveredbyyourgrace-regular-webfont.woff2) format("woff2");
+     font-weight: normal;
+     font-style: normal;
+
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -11,26 +20,29 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    font-family:sans-serif;
+    font-family: "coveredbyyourgrace-regular-webfont", sans-serif;
     background-color:rgb(74, 117, 155) ;
     color: coral;
+    
 }
 
 h1 {
     display: flex;
     flex-direction: column;
     margin-bottom: 15px;
+    font-size: 4rem;
 }
 
 button{
     margin-top: 20px;
-    width: 150px;
-    height: 30px;
-    font-size: 1rem;
+    width: 15rem;
+    height: 6rem;
+    font-size: 2rem;
     cursor: pointer;
     border-radius: 10px;
     background-color:  rgb(13, 5, 88);
     color: coral;
+    font-family: "coveredbyyourgrace-regular-webfont", sans-serif;
 }
 
 #player-form {
@@ -43,20 +55,20 @@ button{
     flex-direction: column;
     margin-bottom: 50px;
     align-items: center;
-    padding: 3rem;
+    padding: 2rem;
     flex-wrap: wrap;
 }
 
 
 input[type="text"] {
     display: flex;
-    padding: 0.5rem;
+    padding: 1rem;
     align-items: center;
     justify-content: center;
     background-color:  rgb(13, 5, 88);
     color: coral;
     border-radius: 10px;
-    
+    font-family: "coveredbyyourgrace-regular-webfont", sans-serif;
 }
 
 input::placeholder {
@@ -73,8 +85,9 @@ input:focus {
 label {
     padding-top: 10px;
     padding-bottom: 10px;
-    color: rgb(13, 5, 88);
+    color: rgba(13, 5, 88, 0.575);
     font-weight: bold;
+    font-size: 1.5rem;
 } 
 
 
@@ -83,10 +96,13 @@ input[type="submit"] {
     justify-content: center;
     padding: 0.5rem;
     align-items: center;
-    width: 7rem;
+    width: 8rem;
+    height: 3rem;
     margin-top: 10px;
     border-radius: 10px;
-    background-color:  rgb(13, 5, 88);
+    background-color:  rgba(13, 5, 88);
+    font-family: "coveredbyyourgrace-regular-webfont", sans-serif;
+    font-size: 1.5rem;
     color: coral;
 
 }
@@ -111,10 +127,10 @@ input[type="submit"]:hover {
 
 
 #results {
-    margin-bottom: 15px;
+    margin-bottom: 25px;
     font-weight: bold;
-    font-size: 1.4rem;
-    text-shadow: 0 0 4px 3px black;
+    font-size: 1.8rem;
+    padding: 10px;
 }
     
 
@@ -127,7 +143,7 @@ input[type="submit"]:hover {
     align-items: center;
     justify-content: center;
     background-color: rgb(13, 5, 88);
-    font-size: 2rem;
+    font-size: 2.4rem;
     cursor: pointer;
     box-shadow: 0 0 4px 3px coral;
     color: coral;
@@ -143,7 +159,7 @@ input[type="submit"]:hover {
     align-items: center;
     justify-content: center;
     margin: 20px;
-    font-size: 1.5rem;
+    font-size: 2rem;
 }
 
 

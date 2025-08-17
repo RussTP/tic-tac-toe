@@ -44,7 +44,9 @@ const GameController = (() => {
     const setPlayerNames = (name1, name2) => {
      if (name1) player1.name = name1;
      if (name2) player2.name = name2;
+       displayController.setResult();
     };
+
 
 
       const getPlayerNames = () => {
@@ -53,6 +55,8 @@ const GameController = (() => {
       player2: player2.name
     };
   };
+
+
 
   const getCurrentPlayer = () => currentPlayer;
 
@@ -76,6 +80,11 @@ const GameController = (() => {
       player1: player1Score, 
       player2: player2Score
     });
+
+        const resetScore = () => {
+      player1Score = 0;
+      player2Score = 0;
+    }
 
 
   const playTurn = (index) => {
@@ -125,7 +134,7 @@ const GameController = (() => {
   };
 
 
-    return {playTurn, checkWin, getCurrentPlayer, getScore, setPlayerNames, getPlayerNames};
+    return {playTurn, checkWin, getCurrentPlayer, getScore, setPlayerNames, getPlayerNames, resetScore};
 })();
 
 
@@ -133,11 +142,11 @@ const GameController = (() => {
 const displayController = (() => {
   const cells = document.querySelectorAll(".cell");
   const message = document.querySelector("#message");
-  const results = document.querySelector("#results");
   const player1Name = document.querySelector("#player1-name");
   const player2Name = document.querySelector("#player2-name");
   const submit = document.querySelector('input[type="submit"]');
   const startButton = document.querySelector("#start-button");
+  const newGameButton = document.querySelector("#new-game-button");
   const getForm = document.querySelector("#player-form");
   const board = document.querySelector("#board");
 
@@ -157,8 +166,9 @@ const displayController = (() => {
       const name2 = player2Name.value.trim();
       getForm.classList.remove("active");
        board.classList.add("active");
-       startButton.disabled = true;
-       startButton.style.backgroundColor = "rgb(145, 145, 143)"; 
+       startButton.style.display = "none";
+       setResult();
+
 
       if (name1 || name2) {
         GameController.setPlayerNames(name1, name2);
@@ -176,16 +186,29 @@ const displayController = (() => {
     
   };
 
+  const newGame = () => {
+    newGameButton.addEventListener("click", () => {
+      getForm.classList.add("active");
+      
+      document.querySelector("#player1-name").value = "";
+      document.querySelector("#player2-name").value = "";
+      
+      GameController.resetScore();
+      Gameboard.reset();
+      setResult("");
+      updateBoard();
+      setMessage("");
+      enableCells();
+      resetCellStyle();
+    });
+  };
+
 
   const setMessage = (msg) => {
     message.textContent = msg;
 
     }
   
-  const setResult = (msg) => {
-      results.textContent = msg;
-  }
-
 
 
       const disableCells = () => {
@@ -206,19 +229,27 @@ const displayController = (() => {
     });
   };
 
+  const setResult = () => {
+    const score = GameController.getScore();
+    const names = GameController.getPlayerNames(); 
+    
+    const resultDisplay = document.querySelector("#results");
+    resultDisplay.textContent = (`${names.player1}: ${score.player1} | ${names.player2}: ${score.player2}`);
+    resultDisplay.style.border ="4px solid rgb(13, 5, 88, 0.700)";
+    resultDisplay.style.borderRadius = "5px"
+    resultDisplay.style.boxShadow = "0 0 4px 3px rgb(255, 127, 80, 0.500)";
+  };
+
 
   cells.forEach((cell, index) => {
     cell.addEventListener("click", () => {
       const result = GameController.playTurn(index);
-      cell.style.transform = "scale(1.07) rotate(360deg)";
+      cell.style.transform = "scale(1.08) rotate(360deg)";
       updateBoard();
 
       if (result.win) {
         setMessage(`${result.player.name} Wins!`);
-
-        const score = GameController.getScore();
-        const names = GameController.getPlayerNames();
-        setResult(`${names.player1}: ${score.player1} | ${names.player2}: ${score.player2}`);
+        setResult();
       } else {
         setMessage(`Player ${result.player.name}'s turn`);
       }
@@ -226,9 +257,9 @@ const displayController = (() => {
   });
 
 
-    return {updateBoard, setMessage, setResult, disableCells, enableCells, setPlayerName, start, resetCellStyle}
+    return {updateBoard, setMessage, setResult, disableCells, enableCells, setPlayerName, start, resetCellStyle, newGame}
 })();
 
 displayController.setPlayerName();
 displayController.start();
-displayController.setResult();
+displayController.newGame();
