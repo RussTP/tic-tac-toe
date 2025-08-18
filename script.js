@@ -167,6 +167,7 @@ const displayController = (() => {
       getForm.classList.remove("active");
        board.classList.add("active");
        startButton.style.display = "none";
+       newGameButton.classList.add("active");
        setResult();
 
 
@@ -181,6 +182,10 @@ const displayController = (() => {
   const start = () => {
     startButton.addEventListener("click", () => { 
   getForm.classList.add("active");
+  getForm.style.border ="4px solid rgb(13, 5, 88, 0.700)";
+  getForm.style.borderRadius = "5px"
+  getForm.style.boxShadow = "0 0 4px 3px rgb(255, 127, 80, 0.500)";
+  getForm.style.padding="20px";
     });
 
     
